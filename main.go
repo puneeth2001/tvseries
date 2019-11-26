@@ -10,11 +10,11 @@ func main() {
 	// Instantiate default collector
 	c := colly.NewCollector(
 		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
-		colly.AllowedDomains("en.wikipedia.org", "en.wikipedia.org/wiki"),
+		colly.AllowedDomains("en.wikipedia.org"),
 	)
 
 	// On every a element which has href attribute call callback
-	c.OnHTML("tr th a[href]", func(e *colly.HTMLElement) {
+	c.OnHTML("th a[href]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		// Print link
 		fmt.Printf("Link found: %q -> %s\n", e.Text, link)
