@@ -3,9 +3,18 @@ package main
 import ("io/ioutil"
 		"net/http"
 		"fmt"
+		"encoding/json"
 	)
-func FetchSeasonData() string{
+type parse struct{
+	title string
+	pageid int
+	wikitext Content2
+}
+type Content2 struct{
+	* string
+}
 
+func FetchSeasonData() []byte{
 
 	req,_ := http.NewRequest("Get","https://en.wikipedia.org/w/api.php", nil)
 	q := req.URL.Query()
@@ -21,13 +30,14 @@ func FetchSeasonData() string{
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	return string(body)
-}
-func GetEpisodeData(){
-	body := FetchSeasonData()
-	fmt.Println(body["parse"])
+	return body
 }
 func main(){
-	fmt.Println(GetEpisodeData())
+	var basket parse
+	var jsonData = FetchSeasonData()
+	err := json.Unmarshal(jsonData, &basket)
+	if err != nil {
+		fmt.Print(err)
+	}
+	fmt.Println(basket.title)
 }
