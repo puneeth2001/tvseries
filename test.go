@@ -4,15 +4,17 @@ import ("io/ioutil"
 		"net/http"
 		"fmt"
 		"encoding/json"
+		"reflect"
 	)
-type parse struct{
-	title string
-	pageid int
-	wikitext Content2
-}
-type Content2 struct{
-	* string
-}
+	type Initial struct {
+		Parse struct {
+			Title    string `json:"title"`
+			Pageid   int    `json:"pageid"`
+			Wikitext struct {
+				NAMING_FAILED string `json:"*"`
+			} `json:"wikitext"`
+		} `json:"parse"`
+	}
 
 func FetchSeasonData() []byte{
 
@@ -30,14 +32,21 @@ func FetchSeasonData() []byte{
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body
+	
+	return (body)
 }
 func main(){
-	var basket parse
+	object := &Initial{}
 	var jsonData = FetchSeasonData()
-	err := json.Unmarshal(jsonData, &basket)
+	err := json.Unmarshal([]byte(jsonData), object)
 	if err != nil {
 		fmt.Print(err)
 	}
-	fmt.Println(basket.title)
+	fmt.Print(object.Parse.Wikitext.NAMING_FAILED)
+	fmt.Print(reflect.TypeOf(object.Parse.Wikitext.NAMING_FAILED))
 }
+
+
+
+
+
