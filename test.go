@@ -46,7 +46,12 @@ func main(){
 	fmt.Print(reflect.TypeOf(object.Parse.Wikitext.NAMING_FAILED))
 }
 
-
-
+b16 := []byte("")
+b16 = strconv.AppendInt(b16,season,16)
+fmt.Println(string(b16))
+q:= u.Query()
+q.Add("language","en-US")
+q.Add("api_key","85024bf9f2db24e284e8959926cd3226")
+q.Encode()
 
 
