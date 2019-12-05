@@ -15,7 +15,7 @@ S = requests.Session()
 
 URL = "https://en.wikipedia.org/w/api.php"
 
-TITLE = "Game_of_Thrones_(season_8)"
+TITLE = ""
 
 PARAMS = {
     'action': "parse",
