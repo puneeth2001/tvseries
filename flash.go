@@ -9,6 +9,7 @@ import (
 	"log"
 	"strconv"
 	"encoding/json"
+	"xyz"
 )
 type Structure struct {
 	ID       string `json:"_id"`
@@ -67,12 +68,12 @@ func FetchSeasonData(act string) []byte{
 	return (body)
 
 }
-func ExampleURL(season int64) string{
-	b16 := []byte("")
-	b16 = strconv.AppendInt(b16,season,16)
-	//fmt.Println(string(b16))
-
-	u, err := url.Parse("https://api.themoviedb.org/3/tv/60735/season/"+string(b16)+"?language=jaffa&api_key=cheppa")
+func ExampleURL(season int64,id int64) string{
+	b16 := strconv.FormatInt(season,10)
+	fmt.Println(string(b16))
+	a16 := strconv.FormatInt(id,10)
+	fmt.Println(string(a16))
+	u, err := url.Parse("https://api.themoviedb.org/3/tv/"+string(a16)+"/season/"+string(b16)+"?language=jaffa&api_key=cheppa")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +83,7 @@ func ExampleURL(season int64) string{
 	
 	u.RawQuery = q.Encode()
 	stringURL := u.String()
-
+	fmt.Println(stringURL)
 	
 	return stringURL
 	// Output: https://google.com/search?q=golang
@@ -91,7 +92,8 @@ func main(){
 	var j int64
 	for j= 0;j<8;j++{
 		JSONdata := &Structure{}
-		var example = ExampleURL(j)
+		
+		var example = ExampleURL(j,xyz.GetID("game of thrones"))
 		var byteData = FetchSeasonData(example)
 		err := json.Unmarshal(byteData, JSONdata)
 		if err != nil{
@@ -106,6 +108,7 @@ func main(){
 			fmt.Println(JSONdata.Episodes[i].Overview)
 		}
 	} 
+		
 
 	
 	

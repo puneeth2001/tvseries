@@ -30,24 +30,8 @@ type Series struct {
 	} `json:"results"`
 }
 
-func FetchSeriesID() []byte{
-
-	url := "https://api.themoviedb.org/3/search/tv?page=1&query=game%20of%20thrones&language=en-US&api_key=85024bf9f2db24e284e8959926cd3226"
-	
-	payload := strings.NewReader("{}")
-
-	req, _ := http.NewRequest("GET", url, payload)
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	return (body)
-
-}
-func ExampleURL(name string) string{
-	u, err := url.Parse("https://api.themoviedb.org/3/search/tv?page=1&query=game%20of%20thrones&language=en-US&api_key=85024bf9f2db24e284e8959926cd3226")
+func FetchSeriesID(name string) []byte{
+	u, err := url.Parse("https://api.themoviedb.org/3/search/tv?page=1")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,7 +60,7 @@ func ExampleURL(name string) string{
 }
 func main(){
 	series := &Series{}
-	var JSONData = FetchSeriesID("game of thrones")
+	var JSONData = ExampleURL("game of thrones")
 	err := json.Unmarshal(JSONData, series)
 	if err != nil {
 		fmt.Print(err)
