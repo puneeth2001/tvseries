@@ -9,7 +9,7 @@ import (
 	"log"
 	"strconv"
 	"encoding/json"
-	"xyz"
+	"packs"
 )
 type Structure struct {
 	ID       string `json:"_id"`
@@ -93,7 +93,7 @@ func main(){
 	for j= 0;j<8;j++{
 		JSONdata := &Structure{}
 		
-		var example = ExampleURL(j,xyz.GetID("game of thrones"))
+		var example = ExampleURL(j,packs.GetID("game of thrones"))
 		var byteData = FetchSeasonData(example)
 		err := json.Unmarshal(byteData, JSONdata)
 		if err != nil{
