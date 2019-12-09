@@ -83,17 +83,20 @@ func ExampleURL(season int64,id int64) string{
 	
 	u.RawQuery = q.Encode()
 	stringURL := u.String()
-	fmt.Println(stringURL)
+	// fmt.Println(stringURL)
 	
 	return stringURL
-	// Output: https://google.com/search?q=golang
+	
 }
 func main(){
 	var j int64
-	for j= 0;j<8;j++{
+	name :="game of thrones"
+	var seasoncount int64
+	seasoncount = packs.GetSeasons(name)
+	for j= 0;j<seasoncount;j++{
 		JSONdata := &Structure{}
 		
-		var example = ExampleURL(j,packs.GetID("game of thrones"))
+		var example = ExampleURL(j,packs.GetID(name))
 		var byteData = FetchSeasonData(example)
 		err := json.Unmarshal(byteData, JSONdata)
 		if err != nil{
@@ -101,9 +104,6 @@ func main(){
 		}
 		for i:= range JSONdata.Episodes{
 			fmt.Printf("%s:%d,%s:%d","season",j,"episode",i)
-			// fmt.Print(j)
-			// fmt.Print("episode:")
-			// fmt.Print(i)
 			fmt.Println()
 			fmt.Println(JSONdata.Episodes[i].Overview)
 		}
