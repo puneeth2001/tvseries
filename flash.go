@@ -1,4 +1,4 @@
-package main
+package tvseries
 
 import (
 	"fmt"
@@ -88,13 +88,13 @@ func ExampleURL(season int64,id int64) string{
 	return stringURL
 	
 }
-func main(){
+func GetSummary(name string, w http.ResponseWriter) Structure{
 	var j int64
-	name :="game of thrones"
 	var seasoncount int64
+	var JSONdata *Structure
 	seasoncount = packs.GetSeasons(name)
-	for j= 0;j<seasoncount;j++{
-		JSONdata := &Structure{}
+	for j= 1;j<seasoncount+1;j++{
+		JSONdata = &Structure{}
 		
 		var example = ExampleURL(j,packs.GetID(name))
 		var byteData = FetchSeasonData(example)
@@ -103,13 +103,12 @@ func main(){
 			fmt.Println(err)
 		}
 		for i:= range JSONdata.Episodes{
-			fmt.Printf("%s:%d,%s:%d","season",j,"episode",i)
+			fmt.Fprintf(w,"<b>season:%depisode:%d</b>",j,i)
 			fmt.Println()
 			fmt.Println(JSONdata.Episodes[i].Overview)
+			fmt.Fprintf(w, JSONdata.Episodes[i].Overview)
+			fmt.Fprintf(w,"</br>")
 		}
 	} 
-		
-
-	
-	
+	return *JSONdata
 }
