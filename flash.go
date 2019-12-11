@@ -1,4 +1,4 @@
-package main
+package tvseries
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 	"log"
 	"strconv"
 	"encoding/json"
+	"packs"
 )
 type Structure struct {
 	ID       string `json:"_id"`
@@ -67,12 +68,12 @@ func FetchSeasonData(act string) []byte{
 	return (body)
 
 }
-func ExampleURL(season int64) string{
-	b16 := []byte("")
-	b16 = strconv.AppendInt(b16,season,16)
-	//fmt.Println(string(b16))
-
-	u, err := url.Parse("https://api.themoviedb.org/3/tv/60735/season/"+string(b16)+"?language=jaffa&api_key=cheppa")
+func ExampleURL(season int64,id int64) string{
+	b16 := strconv.FormatInt(season,10)
+	fmt.Println(string(b16))
+	a16 := strconv.FormatInt(id,10)
+	fmt.Println(string(a16))
+	u, err := url.Parse("https://api.themoviedb.org/3/tv/"+string(a16)+"/season/"+string(b16)+"?language=jaffa&api_key=cheppa")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,31 +83,32 @@ func ExampleURL(season int64) string{
 	
 	u.RawQuery = q.Encode()
 	stringURL := u.String()
-
+	// fmt.Println(stringURL)
 	
 	return stringURL
-	// Output: https://google.com/search?q=golang
+	
 }
-func main(){
+func GetSummary(name string, w http.ResponseWriter) Structure{
 	var j int64
-	for j= 0;j<8;j++{
-		JSONdata := &Structure{}
-		var example = ExampleURL(j)
+	var seasoncount int64
+	var JSONdata *Structure
+	seasoncount = packs.GetSeasons(name)
+	for j= 1;j<seasoncount+1;j++{
+		JSONdata = &Structure{}
+		
+		var example = ExampleURL(j,packs.GetID(name))
 		var byteData = FetchSeasonData(example)
 		err := json.Unmarshal(byteData, JSONdata)
 		if err != nil{
 			fmt.Println(err)
 		}
 		for i:= range JSONdata.Episodes{
-			fmt.Printf("%s:%d,%s:%d","season",j,"episode",i)
-			// fmt.Print(j)
-			// fmt.Print("episode:")
-			// fmt.Print(i)
+			fmt.Fprintf(w,"<b>season:%depisode:%d</b>",j,i)
 			fmt.Println()
 			fmt.Println(JSONdata.Episodes[i].Overview)
+			fmt.Fprintf(w, JSONdata.Episodes[i].Overview)
+			fmt.Fprintf(w,"</br>")
 		}
 	} 
-
-	
-	
+	return *JSONdata
 }
